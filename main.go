@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"math"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -13,10 +15,22 @@ type Entry struct {
 	Cmd string `json:"cmd"`
 }
 
+type ScoredEntry struct {
+	Entry Entry
+	Score float64
+}
+
 func getDataFilePath() string {
+
+	localFile := "entries.json"
+
+	if _, err := os.Stat(localFile); err == nil {
+		return localFile
+	}
+
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return "entries.json"
+		return localFile
 	}
 
 	dir := home + "/.recall"
@@ -37,19 +51,6 @@ func loadEntries() []Entry {
 		return []Entry{}
 	}
 	return entries
-}
-
-func search(entries []Entry, query string) []Entry {
-	query = strings.ToLower(query)
-
-	var results []Entry
-
-	for _, entry := range entries {
-		if strings.Contains(strings.ToLower(entry.Key), query) {
-			results = append(results, entry)
-		}
-	}
-	return results
 }
 
 func addEntry() {
@@ -79,6 +80,137 @@ func saveEntries(entries []Entry) {
 	}
 
 	os.WriteFile(getDataFilePath(), data, 0644)
+}
+
+// tokenize converts a text into lowercase tokens split by whitespace
+func tokenize(text string) []string {
+	text = strings.ToLower(text)
+	return strings.Fields(text)
+}
+
+// computeDocumentFrequency calculates how many documents contain each token.
+// Each token is counted once per entry.
+func computeDocFreq(entries []Entry) map[string]int {
+	docFreq := make(map[string]int)
+
+	for _, entry := range entries {
+
+		seenTokens := make(map[string]bool)
+
+		tokens := tokenize(entry.Key)
+
+		for _, token := range tokens {
+			if !seenTokens[token] {
+				docFreq[token]++
+				seenTokens[token] = true
+			}
+		}
+	}
+
+	return docFreq
+}
+
+// computeBM25Score computes the BM25 relevance score between the query tokens
+// and the description of a single entry.
+//
+// BM25 is a ranking function widely used in search engines.
+func computeBM25Score(
+	entry Entry,
+	queryTokens []string,
+	docFreq map[string]int,
+	totalDoc int,
+	avgDocLen float64,
+) float64 {
+
+	k1 := 1.5
+	b := 0.75
+
+	entryTokens := tokenize(entry.Key)
+
+	docLen := float64(len(entryTokens))
+
+	tokenFreq := make(map[string]int)
+
+	for _, token := range entryTokens {
+		tokenFreq[token]++
+	}
+
+	score := 0.0
+
+	for _, token := range queryTokens {
+
+		freq := tokenFreq[token]
+		if freq == 0 {
+			continue
+		}
+
+		tokenDocFreq := docFreq[token]
+
+		idf := math.Log(
+			(float64(totalDoc)-float64(tokenDocFreq)+0.5)/
+				(float64(tokenDocFreq)+0.5) + 1,
+		)
+
+		numerator := float64(freq) * (k1 + 1)
+
+		denominator := float64(freq) +
+			k1*(1-b+b*(docLen/avgDocLen))
+
+		score += idf * (numerator / denominator)
+	}
+
+	return score
+}
+
+// search ranks entries by BM25 relevance to the query and returns them sorted
+// from highest score to lowest.
+func search(entries []Entry, query string) []Entry {
+
+	queryTokens := tokenize(query)
+
+	docFreq := computeDocFreq(entries)
+
+	totalDoc := len(entries)
+
+	totalDocLen := 0
+
+	for _, entry := range entries {
+		totalDocLen += len(tokenize(entry.Key))
+	}
+
+	avgDocLen := float64(totalDocLen) / float64(totalDoc)
+
+	var scoredEntries []ScoredEntry
+
+	for _, entry := range entries {
+
+		score := computeBM25Score(
+			entry,
+			queryTokens,
+			docFreq,
+			totalDoc,
+			avgDocLen,
+		)
+
+		if score > 0 {
+			scoredEntries = append(scoredEntries, ScoredEntry{
+				Entry: entry,
+				Score: score,
+			})
+		}
+	}
+
+	sort.Slice(scoredEntries, func(i, j int) bool {
+		return scoredEntries[i].Score > scoredEntries[j].Score
+	})
+
+	var results []Entry
+
+	for _, scoredEntry := range scoredEntries {
+		results = append(results, scoredEntry.Entry)
+	}
+
+	return results
 }
 
 func main() {
