@@ -162,6 +162,16 @@ func computeBM25Score(
 	return score
 }
 
+// checkPhraseMatch checks if the query is a substring of the text.
+// Since BM25 doesn't consider the order of tokens,
+// this function is used to give a higher score to entries that contain the exact query as a phrase.
+func checkPhraseMatch(text string, query string) bool {
+	text = strings.ToLower(text)
+	query = strings.ToLower(query)
+
+	return strings.Contains(text, query)
+}
+
 // search ranks entries by BM25 relevance to the query and returns them sorted
 // from highest score to lowest.
 func search(entries []Entry, query string) []Entry {
@@ -191,6 +201,10 @@ func search(entries []Entry, query string) []Entry {
 			totalDoc,
 			avgDocLen,
 		)
+
+		if checkPhraseMatch(entry.Key, query) {
+			score += 1.5
+		}
 
 		if score > 0 {
 			scoredEntries = append(scoredEntries, ScoredEntry{
