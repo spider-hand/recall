@@ -82,6 +82,62 @@ func saveEntries(entries []Entry) {
 	os.WriteFile(getDataFilePath(), data, 0644)
 }
 
+func editEntry(query string) {
+
+	entries := loadEntries()
+
+	results := search(entries, query)
+
+	if len(results) == 0 {
+		fmt.Println("no results")
+		return
+	}
+
+	printEntries(results)
+
+	fmt.Print("select entry to edit: ")
+
+	var choice int
+	fmt.Scanln(&choice)
+
+	if choice < 1 || choice > len(results) {
+		fmt.Println("invalid selection")
+		return
+	}
+
+	target := results[choice-1]
+
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Printf("description (%s): ", target.Key)
+	newKey, _ := reader.ReadString('\n')
+	newKey = strings.TrimSpace(newKey)
+
+	if newKey == "" {
+		newKey = target.Key
+	}
+
+	fmt.Printf("command (%s): ", target.Cmd)
+	newCmd, _ := reader.ReadString('\n')
+	newCmd = strings.TrimSpace(newCmd)
+
+	if newCmd == "" {
+		newCmd = target.Cmd
+	}
+
+	for i, entry := range entries {
+		if entry.Key == target.Key && entry.Cmd == target.Cmd {
+			entries[i].Key = newKey
+			entries[i].Cmd = newCmd
+			break
+		}
+	}
+
+	saveEntries(entries)
+
+	fmt.Println("updated")
+}
+
 func deleteEntries(query string) {
 
 	entries := loadEntries()
@@ -299,6 +355,7 @@ func main() {
 		fmt.Println("Usage:")
 		fmt.Println("  recall <query>   Search commands by description")
 		fmt.Println("  recall --add            Add a new entry")
+		fmt.Println("  recall --edit <query>   Edit an entry")
 		fmt.Println("  recall --delete <query> Delete an entry")
 		fmt.Println("  recall --list           List all entries")
 		fmt.Println("  recall --help           Show help message")
@@ -307,6 +364,17 @@ func main() {
 
 	if args[0] == "--add" {
 		addEntry()
+		return
+	}
+
+	if args[0] == "--edit" {
+		if len(args) < 2 {
+			fmt.Println("usage: recall --edit <query>")
+			return
+		}
+
+		query := strings.Join(args[1:], " ")
+		editEntry(query)
 		return
 	}
 
