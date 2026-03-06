@@ -82,6 +82,49 @@ func saveEntries(entries []Entry) {
 	os.WriteFile(getDataFilePath(), data, 0644)
 }
 
+func deleteEntries(query string) {
+
+	entries := loadEntries()
+
+	results := search(entries, query)
+
+	if len(results) == 0 {
+		fmt.Println("no results")
+		return
+	}
+
+	fmt.Println()
+
+	for i, entry := range results {
+		fmt.Printf("%d) %s\n", i+1, entry.Key)
+		fmt.Printf("   %s\n\n", entry.Cmd)
+	}
+
+	fmt.Print("select entry to delete: ")
+
+	var choice int
+	fmt.Scanln(&choice)
+
+	if choice < 1 || choice > len(results) {
+		fmt.Println("invalid selection")
+		return
+	}
+
+	target := results[choice-1]
+
+	var updated []Entry
+
+	for _, entry := range entries {
+		if entry.Key != target.Key || entry.Cmd != target.Cmd {
+			updated = append(updated, entry)
+		}
+	}
+
+	saveEntries(updated)
+
+	fmt.Println("deleted")
+}
+
 // tokenize converts a text into lowercase tokens split by whitespace
 func tokenize(text string) []string {
 	text = strings.ToLower(text)
@@ -224,6 +267,12 @@ func search(entries []Entry, query string) []Entry {
 		results = append(results, scoredEntry.Entry)
 	}
 
+	const maxResults = 3
+
+	if len(results) > maxResults {
+		results = results[:maxResults]
+	}
+
 	return results
 }
 
@@ -235,6 +284,17 @@ func main() {
 
 	if os.Args[1] == "add" {
 		addEntry()
+		return
+	}
+
+	if os.Args[1] == "delete" {
+		if len(os.Args) < 3 {
+			fmt.Println("usage: recall delete <query>")
+			return
+		}
+
+		query := strings.Join(os.Args[2:], " ")
+		deleteEntries(query)
 		return
 	}
 
