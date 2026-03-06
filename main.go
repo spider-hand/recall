@@ -282,23 +282,25 @@ func main() {
 		return
 	}
 
-	if os.Args[1] == "add" {
+	args := os.Args[1:]
+
+	if args[0] == "--add" {
 		addEntry()
 		return
 	}
 
-	if os.Args[1] == "delete" {
-		if len(os.Args) < 3 {
-			fmt.Println("usage: recall delete <query>")
+	if args[0] == "--delete" {
+		if len(args) < 2 {
+			fmt.Println("usage: recall --delete <query>")
 			return
 		}
 
-		query := strings.Join(os.Args[2:], " ")
+		query := strings.Join(args[1:], " ")
 		deleteEntries(query)
 		return
 	}
 
-	query := strings.Join(os.Args[1:], " ")
+	query := strings.Join(args, " ")
 
 	entries := loadEntries()
 	results := search(entries, query)
