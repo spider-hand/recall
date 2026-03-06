@@ -95,10 +95,7 @@ func deleteEntries(query string) {
 
 	fmt.Println()
 
-	for i, entry := range results {
-		fmt.Printf("%d) %s\n", i+1, entry.Key)
-		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
-	}
+	printEntries(results)
 
 	fmt.Print("select entry to delete: ")
 
@@ -134,10 +131,7 @@ func listEntries() {
 		return
 	}
 
-	for i, entry := range entries {
-		fmt.Printf("%d) %s\n", i+1, entry.Key)
-		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
-	}
+	printEntries(entries)
 }
 
 // tokenize converts a text into lowercase tokens split by whitespace
@@ -291,6 +285,13 @@ func search(entries []Entry, query string) []Entry {
 	return results
 }
 
+func printEntries(entries []Entry) {
+	for i, entry := range entries {
+		fmt.Printf("%d) %s\n", i+1, entry.Key)
+		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
+	}
+}
+
 func main() {
 	args := os.Args[1:]
 
@@ -340,8 +341,5 @@ func main() {
 		return
 	}
 
-	for i, entry := range results {
-		fmt.Printf("%d) %s\n", i+1, entry.Key)
-		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
-	}
+	printEntries(results)
 }
