@@ -97,7 +97,7 @@ func deleteEntries(query string) {
 
 	for i, entry := range results {
 		fmt.Printf("%d) %s\n", i+1, entry.Key)
-		fmt.Printf("   %s\n\n", entry.Cmd)
+		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
 	}
 
 	fmt.Print("select entry to delete: ")
@@ -123,6 +123,21 @@ func deleteEntries(query string) {
 	saveEntries(updated)
 
 	fmt.Println("deleted")
+}
+
+func listEntries() {
+
+	entries := loadEntries()
+
+	if len(entries) == 0 {
+		fmt.Println("no entries")
+		return
+	}
+
+	for i, entry := range entries {
+		fmt.Printf("%d) %s\n", i+1, entry.Key)
+		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
+	}
 }
 
 // tokenize converts a text into lowercase tokens split by whitespace
@@ -297,6 +312,11 @@ func main() {
 
 		query := strings.Join(args[1:], " ")
 		deleteEntries(query)
+		return
+	}
+
+	if args[0] == "--list" {
+		listEntries()
 		return
 	}
 
