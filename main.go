@@ -292,12 +292,17 @@ func search(entries []Entry, query string) []Entry {
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("usage: recall <query>")
+	args := os.Args[1:]
+
+	if len(args) == 0 || args[0] == "--help" {
+		fmt.Println("Usage:")
+		fmt.Println("  recall <query>   Search commands by description")
+		fmt.Println("  recall --add            Add a new entry")
+		fmt.Println("  recall --delete <query> Delete an entry")
+		fmt.Println("  recall --list           List all entries")
+		fmt.Println("  recall --help           Show help message")
 		return
 	}
-
-	args := os.Args[1:]
 
 	if args[0] == "--add" {
 		addEntry()
@@ -336,6 +341,7 @@ func main() {
 	}
 
 	for i, entry := range results {
-		fmt.Printf("%d) %s\n", i+1, entry.Cmd)
+		fmt.Printf("%d) %s\n", i+1, entry.Key)
+		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
 	}
 }
