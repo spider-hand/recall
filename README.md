@@ -1,5 +1,7 @@
 # recall
 
+![demo](https://github.com/user-attachments/assets/805510a7-8452-4106-be40-a04fa369bee4)
+
 [![Build](https://github.com/spider-hand/recall/actions/workflows/ci.yml/badge.svg)](https://github.com/spider-hand/recall/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Go Reference](https://pkg.go.dev/badge/github.com/spider-hand/recall.svg)](https://pkg.go.dev/github.com/spider-hand/recall)
 
 A CLI tool to find commands by describing what you want to do when you forget them
