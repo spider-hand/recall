@@ -225,6 +225,60 @@ func tokenize(text string) []string {
 	return strings.Fields(text)
 }
 
+var synonymMap = map[string][]string{
+	// delete/remove
+	"remove": {"delete"},
+	"delete": {"remove"},
+	// create/add/new/make
+	"create": {"add", "new", "make"},
+	"add":    {"create", "new", "make"},
+	"new":    {"create", "add", "make"},
+	"make":   {"create", "add", "new"},
+	// update/edit/modify/change
+	"update": {"edit", "modify", "change"},
+	"edit":   {"update", "modify", "change"},
+	"modify": {"update", "edit", "change"},
+	"change": {"update", "edit", "modify"},
+	// list/show/display/view
+	"list":    {"show", "display", "view"},
+	"show":    {"list", "display", "view"},
+	"display": {"list", "show", "view"},
+	"view":    {"list", "show", "display"},
+	// start/run/execute/launch
+	"start":   {"run", "execute", "launch"},
+	"run":     {"start", "execute", "launch"},
+	"execute": {"start", "run", "launch"},
+	"launch":  {"start", "run", "execute"},
+	// stop/kill/terminate/end
+	"stop":      {"kill", "terminate", "end"},
+	"kill":      {"stop", "terminate", "end"},
+	"terminate": {"stop", "kill", "end"},
+	"end":       {"stop", "kill", "terminate"},
+	// install/setup/configure
+	"install":   {"setup", "configure"},
+	"setup":     {"install", "configure"},
+	"configure": {"install", "setup"},
+}
+
+// expandSynonyms expands query tokens by adding synonyms from synonymMap.
+// This improves search recall so "remove" also matches entries with "delete".
+func expandSynonyms(tokens []string) []string {
+	expanded := make(map[string]bool)
+	for _, token := range tokens {
+		expanded[token] = true
+		if synonyms, ok := synonymMap[token]; ok {
+			for _, syn := range synonyms {
+				expanded[syn] = true
+			}
+		}
+	}
+	result := make([]string, 0, len(expanded))
+	for token := range expanded {
+		result = append(result, token)
+	}
+	return result
+}
+
 // computeDocumentFrequency calculates how many documents contain each token.
 // Each token is counted once per entry.
 func computeDocFreq(entries []Entry) map[string]int {
@@ -314,6 +368,7 @@ func checkPhraseMatch(text string, query string) bool {
 func search(entries []Entry, query string) []Entry {
 
 	queryTokens := tokenize(query)
+	queryTokens = expandSynonyms(queryTokens)
 
 	docFreq := computeDocFreq(entries)
 
