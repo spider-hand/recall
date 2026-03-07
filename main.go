@@ -381,6 +381,8 @@ func printEntries(entries []Entry) {
 	}
 }
 
+var version = "1.0.0"
+
 func main() {
 	args := os.Args[1:]
 
@@ -391,7 +393,13 @@ func main() {
 		fmt.Println("  recall --edit <query>   Edit an entry")
 		fmt.Println("  recall --delete <query> Delete an entry")
 		fmt.Println("  recall --list           List all entries")
+		fmt.Println("  recall --version        Show version")
 		fmt.Println("  recall --help           Show help message")
+		return
+	}
+
+	if args[0] == "--version" {
+		fmt.Println("recall", version)
 		return
 	}
 
