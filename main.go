@@ -436,7 +436,7 @@ func printEntries(entries []Entry) {
 	}
 }
 
-var version = "1.0.0"
+var version = "dev"
 
 func main() {
 	args := os.Args[1:]

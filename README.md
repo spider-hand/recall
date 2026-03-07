@@ -1,5 +1,7 @@
 # recall
 
+[![Build](https://github.com/spider-hand/recall/actions/workflows/ci.yml/badge.svg)](https://github.com/spider-hand/recall/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Go Reference](https://pkg.go.dev/badge/github.com/spider-hand/recall.svg)](https://pkg.go.dev/github.com/spider-hand/recall)
+
 A CLI tool to find commands by describing what you want to do when you forget them
 
 ## Motivation
@@ -16,16 +18,17 @@ I thought it might be helpful to have something that provides a similar UX to as
 
 Download the latest binary from [releases](https://github.com/spider-hand/recall/releases).
 
-### Brew
+### Homebrew
 
 ```sh
+brew tap spider-hand/tap
 brew install recall
 ```
 
-### Chocolatey
+### Go
 
 ```sh
-choco install recall
+go install github.com/spider-hand/recall@latest
 ```
 
 ## Usage
