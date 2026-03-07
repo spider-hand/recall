@@ -22,6 +22,10 @@ type ScoredEntry struct {
 
 func getDataFilePath() string {
 
+	if envPath := os.Getenv("DATA_DIR"); envPath != "" {
+		return envPath + "/entries.json"
+	}
+
 	localFile := "entries.json"
 
 	if _, err := os.Stat(localFile); err == nil {
