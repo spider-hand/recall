@@ -11,8 +11,8 @@ import (
 )
 
 type Entry struct {
-	Key string `json:"key"`
-	Cmd string `json:"cmd"`
+	Description string   `json:"description"`
+	Commands    []string `json:"commands"`
 }
 
 type ScoredEntry struct {
@@ -57,16 +57,29 @@ func addEntry() {
 	reader := bufio.NewReader(os.Stdin)
 
 	fmt.Print("description: ")
-	key, _ := reader.ReadString('\n')
-	key = strings.TrimSpace(key)
+	description, _ := reader.ReadString('\n')
+	description = strings.TrimSpace(description)
 
-	fmt.Print("command: ")
-	cmd, _ := reader.ReadString('\n')
-	cmd = strings.TrimSpace(cmd)
+	fmt.Println("commands (empty line to finish):")
+	var commands []string
+	for {
+		fmt.Print("> ")
+		cmd, _ := reader.ReadString('\n')
+		cmd = strings.TrimSpace(cmd)
+		if cmd == "" {
+			break
+		}
+		commands = append(commands, cmd)
+	}
+
+	if len(commands) == 0 {
+		fmt.Println("no commands added")
+		return
+	}
 
 	entries := loadEntries()
 
-	entry := Entry{Key: key, Cmd: cmd}
+	entry := Entry{Description: description, Commands: commands}
 
 	entries = append(entries, entry)
 
@@ -109,26 +122,38 @@ func editEntry(query string) {
 
 	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Printf("description (%s): ", target.Key)
-	newKey, _ := reader.ReadString('\n')
-	newKey = strings.TrimSpace(newKey)
+	fmt.Printf("description (%s): ", target.Description)
+	newDescription, _ := reader.ReadString('\n')
+	newDescription = strings.TrimSpace(newDescription)
 
-	if newKey == "" {
-		newKey = target.Key
+	if newDescription == "" {
+		newDescription = target.Description
 	}
 
-	fmt.Printf("command (%s): ", target.Cmd)
-	newCmd, _ := reader.ReadString('\n')
-	newCmd = strings.TrimSpace(newCmd)
+	fmt.Println("current commands:")
+	for i, cmd := range target.Commands {
+		fmt.Printf("  %d) %s\n", i+1, cmd)
+	}
+	fmt.Println("new commands (empty line to finish):")
+	var newCommands []string
+	for {
+		fmt.Print("> ")
+		cmd, _ := reader.ReadString('\n')
+		cmd = strings.TrimSpace(cmd)
+		if cmd == "" {
+			break
+		}
+		newCommands = append(newCommands, cmd)
+	}
 
-	if newCmd == "" {
-		newCmd = target.Cmd
+	if len(newCommands) == 0 {
+		newCommands = target.Commands
 	}
 
 	for i, entry := range entries {
-		if entry.Key == target.Key && entry.Cmd == target.Cmd {
-			entries[i].Key = newKey
-			entries[i].Cmd = newCmd
+		if entry.Description == target.Description {
+			entries[i].Description = newDescription
+			entries[i].Commands = newCommands
 			break
 		}
 	}
@@ -168,7 +193,7 @@ func deleteEntries(query string) {
 	var updated []Entry
 
 	for _, entry := range entries {
-		if entry.Key != target.Key || entry.Cmd != target.Cmd {
+		if entry.Description != target.Description {
 			updated = append(updated, entry)
 		}
 	}
@@ -205,7 +230,7 @@ func computeDocFreq(entries []Entry) map[string]int {
 
 		seenTokens := make(map[string]bool)
 
-		tokens := tokenize(entry.Key)
+		tokens := tokenize(entry.Description)
 
 		for _, token := range tokens {
 			if !seenTokens[token] {
@@ -233,7 +258,7 @@ func computeBM25Score(
 	k1 := 1.5
 	b := 0.75
 
-	entryTokens := tokenize(entry.Key)
+	entryTokens := tokenize(entry.Description)
 
 	docLen := float64(len(entryTokens))
 
@@ -293,7 +318,7 @@ func search(entries []Entry, query string) []Entry {
 	totalDocLen := 0
 
 	for _, entry := range entries {
-		totalDocLen += len(tokenize(entry.Key))
+		totalDocLen += len(tokenize(entry.Description))
 	}
 
 	avgDocLen := float64(totalDocLen) / float64(totalDoc)
@@ -310,7 +335,7 @@ func search(entries []Entry, query string) []Entry {
 			avgDocLen,
 		)
 
-		if checkPhraseMatch(entry.Key, query) {
+		if checkPhraseMatch(entry.Description, query) {
 			score += 1.5
 		}
 
@@ -343,8 +368,12 @@ func search(entries []Entry, query string) []Entry {
 
 func printEntries(entries []Entry) {
 	for i, entry := range entries {
-		fmt.Printf("%d) %s\n", i+1, entry.Key)
-		fmt.Printf("%*s%s\n\n", len(fmt.Sprintf("%d) ", i+1)), "", entry.Cmd)
+		fmt.Printf("%d) %s\n", i+1, entry.Description)
+		indent := len(fmt.Sprintf("%d) ", i+1))
+		for _, cmd := range entry.Commands {
+			fmt.Printf("%*s%s\n", indent, "", cmd)
+		}
+		fmt.Println()
 	}
 }
 
@@ -405,7 +434,9 @@ func main() {
 	}
 
 	if len(results) == 1 {
-		fmt.Println(results[0].Cmd)
+		for _, cmd := range results[0].Commands {
+			fmt.Println(cmd)
+		}
 		return
 	}
 
