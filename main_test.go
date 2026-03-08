@@ -168,7 +168,7 @@ func TestList(t *testing.T) {
 			initialEntries: []Entry{
 				{Description: "deploy", Commands: []string{"git push"}},
 			},
-			wantContains: []string{"deploy", "git push"},
+			wantContains: []string{"deploy", "$ git push"},
 		},
 		{
 			name:           "empty",
@@ -212,7 +212,7 @@ func TestSearch(t *testing.T) {
 				{Description: "build docker image", Commands: []string{"docker build"}},
 			},
 			query:          []string{"deploy"},
-			wantContains:   []string{"git push", "kubectl apply"},
+			wantContains:   []string{"deploy to production", "$ git push", "$ kubectl apply"},
 			wantNotContain: []string{"1)"},
 		},
 		{
@@ -223,7 +223,7 @@ func TestSearch(t *testing.T) {
 				{Description: "docker build", Commands: []string{"docker build ."}},
 			},
 			query:        []string{"git"},
-			wantContains: []string{"1)", "2)", "git push", "git pull"},
+			wantContains: []string{"1)", "2)", "$ git push", "$ git pull"},
 		},
 		{
 			name: "max 3 results",

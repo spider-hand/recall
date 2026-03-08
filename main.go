@@ -435,12 +435,19 @@ func search(entries []Entry, query string) []Entry {
 	return results
 }
 
+func printEntry(entry Entry) {
+	fmt.Println(entry.Description)
+	for _, cmd := range entry.Commands {
+		fmt.Printf("$ %s\n", cmd)
+	}
+}
+
 func printEntries(entries []Entry) {
 	for i, entry := range entries {
 		fmt.Printf("%d) %s\n", i+1, entry.Description)
 		indent := len(fmt.Sprintf("%d) ", i+1))
 		for _, cmd := range entry.Commands {
-			fmt.Printf("%*s%s\n", indent, "", cmd)
+			fmt.Printf("%*s$ %s\n", indent, "", cmd)
 		}
 		fmt.Println()
 	}
@@ -511,9 +518,7 @@ func main() {
 	}
 
 	if len(results) == 1 {
-		for _, cmd := range results[0].Commands {
-			fmt.Println(cmd)
-		}
+		printEntry(results[0])
 		return
 	}
 
