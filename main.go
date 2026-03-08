@@ -226,9 +226,10 @@ func tokenize(text string) []string {
 }
 
 var synonymMap = map[string][]string{
-	// delete/remove
-	"remove": {"delete"},
-	"delete": {"remove"},
+	// delete/remove/clean
+	"remove": {"delete", "clean"},
+	"delete": {"remove", "clean"},
+	"clean":  {"remove", "delete"},
 	// create/add/new/make
 	"create": {"add", "new", "make"},
 	"add":    {"create", "new", "make"},
@@ -258,6 +259,15 @@ var synonymMap = map[string][]string{
 	"install":   {"setup", "configure"},
 	"setup":     {"install", "configure"},
 	"configure": {"install", "setup"},
+	// undo/revert/rollback/cancel
+	"undo":     {"revert", "rollback", "cancel"},
+	"revert":   {"undo", "rollback", "cancel"},
+	"rollback": {"undo", "revert", "cancel"},
+	"cancel":   {"undo", "revert", "rollback"},
+	// find/search/lookup
+	"find":   {"search", "lookup"},
+	"search": {"find", "lookup"},
+	"lookup": {"find", "search"},
 }
 
 // expandSynonyms expands query tokens by adding synonyms from synonymMap.
