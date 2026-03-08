@@ -1,8 +1,8 @@
 # recall
 
-![demo](https://github.com/user-attachments/assets/805510a7-8452-4106-be40-a04fa369bee4)
+![demo](./assets/demo.gif)
 
-[![Build](https://github.com/spider-hand/recall/actions/workflows/ci.yml/badge.svg)](https://github.com/spider-hand/recall/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Go Reference](https://pkg.go.dev/badge/github.com/spider-hand/recall.svg)](https://pkg.go.dev/github.com/spider-hand/recall)
+[![Build](https://github.com/spider-hand/recall/actions/workflows/ci.yml/badge.svg)](https://github.com/spider-hand/recall/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Go Reference](https://pkg.go.dev/badge/github.com/spider-hand/recall.svg)](https://pkg.go.dev/github.com/spider-hand/recall) [![Go Report Card](https://goreportcard.com/badge/github.com/spider-hand/recall)](https://goreportcard.com/report/github.com/spider-hand/recall)
 
 A CLI tool to find commands by describing what you want to do when you forget them
 
@@ -10,7 +10,7 @@ A CLI tool to find commands by describing what you want to do when you forget th
 
 Even after years of working as a software engineer, I still find myself forgetting commands and searching for them again and again.
 
-You could search your shell history, grep through notes, or ask ChatGPT, but sometimes that might feel like overkill.
+You could search your shell history, keep notes, or ask ChatGPT, but sometimes that might feel like overkill.
 
 I thought it might be helpful to have something that provides a similar UX to asking ChatGPT, but directly in the terminal.
 
@@ -55,18 +55,18 @@ Output example:
 
 ```sh
 delete local branch
-git branch -d <branch>
+$ git branch -d <branch>
 ```
 
 If multiple results are found, they are listed:
 
 ```sh
 1) delete local branch
-   git branch -d <branch>
+   $ git branch -d <branch>
 
 2) delete remote branch
    git push origin --delete <branch>
-   git fetch -p
+   $ git fetch -p
 ```
 
 #### Add
