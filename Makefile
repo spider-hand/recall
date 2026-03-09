@@ -8,6 +8,13 @@ run:
 
 test:
 	go test ./...
+	go test -tags=e2e ./...
+
+test-unit:
+	go test ./...
+
+test-e2e:
+	go test -tags=e2e ./...
 
 clean:
 	rm -f $(BINARY_NAME)
