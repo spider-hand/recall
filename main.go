@@ -458,31 +458,31 @@ var version = "dev"
 func main() {
 	args := os.Args[1:]
 
-	if len(args) == 0 || args[0] == "--help" {
+	if len(args) == 0 || args[0] == "--help" || args[0] == "-h" {
 		fmt.Println("Usage:")
-		fmt.Println("  recall <query>   Search commands by description")
-		fmt.Println("  recall --add            Add a new entry")
-		fmt.Println("  recall --edit <query>   Edit an entry")
-		fmt.Println("  recall --delete <query> Delete an entry")
-		fmt.Println("  recall --list           List all entries")
-		fmt.Println("  recall --version        Show version")
-		fmt.Println("  recall --help           Show help message")
+		fmt.Println("  recall <query>               Search commands by description")
+		fmt.Println("  recall -a, --add             Add a new entry")
+		fmt.Println("  recall -e, --edit <query>    Edit an entry")
+		fmt.Println("  recall -d, --delete <query>  Delete an entry")
+		fmt.Println("  recall -l, --list            List all entries")
+		fmt.Println("  recall -v, --version         Show version")
+		fmt.Println("  recall -h, --help            Show help message")
 		return
 	}
 
-	if args[0] == "--version" {
+	if args[0] == "--version" || args[0] == "-v" {
 		fmt.Println("recall", version)
 		return
 	}
 
-	if args[0] == "--add" {
+	if args[0] == "--add" || args[0] == "-a" {
 		addEntry()
 		return
 	}
 
-	if args[0] == "--edit" {
+	if args[0] == "--edit" || args[0] == "-e" {
 		if len(args) < 2 {
-			fmt.Println("usage: recall --edit <query>")
+			fmt.Println("usage: recall -e, --edit <query>")
 			return
 		}
 
@@ -491,9 +491,9 @@ func main() {
 		return
 	}
 
-	if args[0] == "--delete" {
+	if args[0] == "--delete" || args[0] == "-d" {
 		if len(args) < 2 {
-			fmt.Println("usage: recall --delete <query>")
+			fmt.Println("usage: recall -d, --delete <query>")
 			return
 		}
 
@@ -502,7 +502,7 @@ func main() {
 		return
 	}
 
-	if args[0] == "--list" {
+	if args[0] == "--list" || args[0] == "-l" {
 		listEntries()
 		return
 	}

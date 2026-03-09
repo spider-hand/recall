@@ -97,12 +97,12 @@ description: undo last commit
 ### Other Actions
 
 ```
---add               Add a new entry
---edit <query>      Edit an entry
---delete <query>    Delete an entry
---list              List all entries
---version           Show version
---help              Show help message
+-a, --add               Add a new entry
+-e, --edit <query>      Edit an entry
+-d, --delete <query>    Delete an entry
+-l, --list              List all entries
+-v, --version           Show version
+-h, --help              Show help message
 ```
 
 ## License

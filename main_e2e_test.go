@@ -105,6 +105,11 @@ func TestHelp(t *testing.T) {
 			contains: []string{"Usage:", "--add", "--edit", "--delete", "--list"},
 		},
 		{
+			name:     "with -h short flag",
+			args:     []string{"-h"},
+			contains: []string{"Usage:", "-a, --add", "-e, --edit", "-d, --delete", "-l, --list"},
+		},
+		{
 			name:     "with no args",
 			args:     []string{},
 			contains: []string{"Usage:"},
@@ -157,6 +162,14 @@ func TestAdd(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("with -a short flag", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{})
+		runCommand(t, dataDir, "test entry\ntest cmd\n\n", "-a")
+
+		entries := readEntries(t, dataDir)
+		assertEntryCount(t, entries, 1)
+	})
 }
 
 func TestList(t *testing.T) {
@@ -189,6 +202,16 @@ func TestList(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("with -l short flag", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{
+			{Description: "test entry", Commands: []string{"test cmd"}},
+		})
+		output := runCommand(t, dataDir, "", "-l")
+
+		assertContains(t, output, "test entry")
+		assertContains(t, output, "$ test cmd")
+	})
 }
 
 func TestQuery(t *testing.T) {
@@ -272,7 +295,7 @@ func TestEdit(t *testing.T) {
 			name:         "missing query",
 			args:         []string{"--edit"},
 			stdin:        "",
-			wantContains: "usage: recall --edit <query>",
+			wantContains: "usage: recall -e, --edit <query>",
 		},
 		{
 			name: "no results",
@@ -359,6 +382,18 @@ func TestEdit(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("with -e short flag", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{
+			{Description: "test entry", Commands: []string{"old cmd"}},
+		})
+		runCommand(t, dataDir, "1\nnew desc\nnew cmd\n\n", "-e", "test")
+
+		entries := readEntries(t, dataDir)
+		if entries[0].Description != "new desc" {
+			t.Errorf("expected description 'new desc', got %q", entries[0].Description)
+		}
+	})
 }
 
 func TestDelete(t *testing.T) {
@@ -374,7 +409,7 @@ func TestDelete(t *testing.T) {
 			name:         "missing query",
 			args:         []string{"--delete"},
 			stdin:        "",
-			wantContains: "usage: recall --delete <query>",
+			wantContains: "usage: recall -d, --delete <query>",
 		},
 		{
 			name: "no results",
@@ -424,4 +459,15 @@ func TestDelete(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("with -d short flag", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{
+			{Description: "to delete", Commands: []string{"cmd"}},
+		})
+		output := runCommand(t, dataDir, "1\n", "-d", "delete")
+
+		assertContains(t, output, "deleted")
+		entries := readEntries(t, dataDir)
+		assertEntryCount(t, entries, 0)
+	})
 }
