@@ -1,0 +1,470 @@
+[
+  {
+    "description": "Show merged kubeconfig settings",
+    "commands": ["kubectl config view"]
+  },
+  {
+    "description": "Show kubeconfig with raw certificate data",
+    "commands": ["kubectl config view --raw"]
+  },
+  {
+    "description": "Get password for a user from kubeconfig",
+    "commands": ["kubectl config view -o jsonpath='{.users[?(@.name == \"<user>\")].user.password}'"]
+  },
+  {
+    "description": "Get certificate for a user from kubeconfig",
+    "commands": ["kubectl config view --raw -o jsonpath='{.users[?(@.name == \"<user>\")].user.client-certificate-data}' | base64 -d"]
+  },
+  {
+    "description": "Display list of users in kubeconfig",
+    "commands": ["kubectl config view -o jsonpath='{.users[*].name}'"]
+  },
+  {
+    "description": "Display list of contexts",
+    "commands": ["kubectl config get-contexts"]
+  },
+  {
+    "description": "Get all context names",
+    "commands": ["kubectl config get-contexts -o name"]
+  },
+  {
+    "description": "Display the current context",
+    "commands": ["kubectl config current-context"]
+  },
+  {
+    "description": "Set the default context",
+    "commands": ["kubectl config use-context <context>"]
+  },
+  {
+    "description": "Set a cluster entry in the kubeconfig",
+    "commands": ["kubectl config set-cluster <cluster>"]
+  },
+  {
+    "description": "Set a proxy URL for a cluster",
+    "commands": ["kubectl config set-cluster <cluster> --proxy-url=<proxy-url>"]
+  },
+  {
+    "description": "Add a new user with basic auth",
+    "commands": ["kubectl config set-credentials <user> --username=<username> --password=<password>"]
+  },
+  {
+    "description": "Set namespace for current context",
+    "commands": ["kubectl config set-context --current --namespace=<namespace>"]
+  },
+  {
+    "description": "Set and use a context with user and namespace",
+    "commands": ["kubectl config set-context <context> --user=<user> --namespace=<namespace>", "kubectl config use-context <context>"]
+  },
+  {
+    "description": "Delete a user from kubeconfig",
+    "commands": ["kubectl config unset users.<user>"]
+  },
+  {
+    "description": "Create resource from a manifest file",
+    "commands": ["kubectl apply -f <manifest.yaml>"]
+  },
+  {
+    "description": "Create resources from multiple files",
+    "commands": ["kubectl apply -f <file1.yaml> -f <file2.yaml>"]
+  },
+  {
+    "description": "Create resources from all files in a directory",
+    "commands": ["kubectl apply -f <dir>"]
+  },
+  {
+    "description": "Create resources from a URL",
+    "commands": ["kubectl apply -f <url>"]
+  },
+  {
+    "description": "Create a deployment",
+    "commands": ["kubectl create deployment <name> --image=<image>"]
+  },
+  {
+    "description": "Create a Job",
+    "commands": ["kubectl create job <name> --image=<image> -- <command>"]
+  },
+  {
+    "description": "Create a CronJob",
+    "commands": ["kubectl create cronjob <name> --image=<image> --schedule=\"<schedule>\" -- <command>"]
+  },
+  {
+    "description": "Get documentation for a resource",
+    "commands": ["kubectl explain <resource>"]
+  },
+  {
+    "description": "List all services in the namespace",
+    "commands": ["kubectl get services"]
+  },
+  {
+    "description": "List all pods in all namespaces",
+    "commands": ["kubectl get pods --all-namespaces"]
+  },
+  {
+    "description": "List all pods with more details",
+    "commands": ["kubectl get pods -o wide"]
+  },
+  {
+    "description": "List a particular deployment",
+    "commands": ["kubectl get deployment <name>"]
+  },
+  {
+    "description": "List all pods in the namespace",
+    "commands": ["kubectl get pods"]
+  },
+  {
+    "description": "Get a pod's YAML",
+    "commands": ["kubectl get pod <pod> -o yaml"]
+  },
+  {
+    "description": "Describe a node",
+    "commands": ["kubectl describe nodes <node>"]
+  },
+  {
+    "description": "Describe a pod",
+    "commands": ["kubectl describe pods <pod>"]
+  },
+  {
+    "description": "List services sorted by name",
+    "commands": ["kubectl get services --sort-by=.metadata.name"]
+  },
+  {
+    "description": "List pods sorted by restart count",
+    "commands": ["kubectl get pods --sort-by='.status.containerStatuses[0].restartCount'"]
+  },
+  {
+    "description": "List PersistentVolumes sorted by capacity",
+    "commands": ["kubectl get pv --sort-by=.spec.capacity.storage"]
+  },
+  {
+    "description": "Get pods with a specific label",
+    "commands": ["kubectl get pods --selector=<label>=<value>"]
+  },
+  {
+    "description": "Get a value from a configmap",
+    "commands": ["kubectl get configmap <name> -o jsonpath='{.data.<key>}'"]
+  },
+  {
+    "description": "Get worker nodes excluding control plane",
+    "commands": ["kubectl get node --selector='!node-role.kubernetes.io/control-plane'"]
+  },
+  {
+    "description": "Get all running pods",
+    "commands": ["kubectl get pods --field-selector=status.phase=Running"]
+  },
+  {
+    "description": "Get external IPs of all nodes",
+    "commands": ["kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type==\"ExternalIP\")].address}'"]
+  },
+  {
+    "description": "Show labels for all pods",
+    "commands": ["kubectl get pods --show-labels"]
+  },
+  {
+    "description": "Check which nodes are ready",
+    "commands": ["kubectl get node -o custom-columns='NODE_NAME:.metadata.name,STATUS:.status.conditions[?(@.type==\"Ready\")].status'"]
+  },
+  {
+    "description": "Decode and display a secret",
+    "commands": ["kubectl get secret <secret> -o go-template='{{range $k,$v := .data}}{{$k}}: {{$v|base64decode}}{{\"\\n\"}}{{end}}'"]
+  },
+  {
+    "description": "List events sorted by timestamp",
+    "commands": ["kubectl get events --sort-by=.metadata.creationTimestamp"]
+  },
+  {
+    "description": "List all warning events",
+    "commands": ["kubectl events --types=Warning"]
+  },
+  {
+    "description": "Compare manifest with current cluster state",
+    "commands": ["kubectl diff -f <manifest.yaml>"]
+  },
+  {
+    "description": "Get a deployment's status",
+    "commands": ["kubectl get deployment <name> --subresource=status"]
+  },
+  {
+    "description": "Rolling update a deployment's image",
+    "commands": ["kubectl set image deployment/<name> <container>=<image>:<tag>"]
+  },
+  {
+    "description": "Check deployment rollout history",
+    "commands": ["kubectl rollout history deployment/<name>"]
+  },
+  {
+    "description": "Rollback to the previous deployment",
+    "commands": ["kubectl rollout undo deployment/<name>"]
+  },
+  {
+    "description": "Rollback to a specific revision",
+    "commands": ["kubectl rollout undo deployment/<name> --to-revision=<revision>"]
+  },
+  {
+    "description": "Watch rolling update status",
+    "commands": ["kubectl rollout status -w deployment/<name>"]
+  },
+  {
+    "description": "Rolling restart a deployment",
+    "commands": ["kubectl rollout restart deployment/<name>"]
+  },
+  {
+    "description": "Replace a resource from stdin",
+    "commands": ["cat <file.json> | kubectl replace -f -"]
+  },
+  {
+    "description": "Force replace a resource",
+    "commands": ["kubectl replace --force -f <manifest.yaml>"]
+  },
+  {
+    "description": "Expose a replication controller as a service",
+    "commands": ["kubectl expose rc <name> --port=<port> --target-port=<target-port>"]
+  },
+  {
+    "description": "Add a label to a pod",
+    "commands": ["kubectl label pods <pod> <label>=<value>"]
+  },
+  {
+    "description": "Remove a label from a pod",
+    "commands": ["kubectl label pods <pod> <label>-"]
+  },
+  {
+    "description": "Overwrite a label on a pod",
+    "commands": ["kubectl label pods <pod> <label>=<value> --overwrite"]
+  },
+  {
+    "description": "Add an annotation to a pod",
+    "commands": ["kubectl annotate pods <pod> <annotation>=<value>"]
+  },
+  {
+    "description": "Remove an annotation from a pod",
+    "commands": ["kubectl annotate pods <pod> <annotation>-"]
+  },
+  {
+    "description": "Auto scale a deployment",
+    "commands": ["kubectl autoscale deployment <name> --min=<min> --max=<max>"]
+  },
+  {
+    "description": "Patch a node",
+    "commands": ["kubectl patch node <node> -p '<json-patch>'"]
+  },
+  {
+    "description": "Patch a pod's container image",
+    "commands": ["kubectl patch pod <pod> -p '{\"spec\":{\"containers\":[{\"name\":\"<container>\",\"image\":\"<image>\"}]}}'"]
+  },
+  {
+    "description": "Patch using JSON patch",
+    "commands": ["kubectl patch pod <pod> --type='json' -p='[{\"op\": \"replace\", \"path\": \"<path>\", \"value\":\"<value>\"}]'"]
+  },
+  {
+    "description": "Patch a deployment's replica count",
+    "commands": ["kubectl patch deployment <name> --subresource='scale' --type='merge' -p '{\"spec\":{\"replicas\":<count>}}'"]
+  },
+  {
+    "description": "Edit a service",
+    "commands": ["kubectl edit svc/<name>"]
+  },
+  {
+    "description": "Edit with a specific editor",
+    "commands": ["KUBE_EDITOR=\"<editor>\" kubectl edit svc/<name>"]
+  },
+  {
+    "description": "Scale a replicaset",
+    "commands": ["kubectl scale --replicas=<count> rs/<name>"]
+  },
+  {
+    "description": "Scale a resource from a file",
+    "commands": ["kubectl scale --replicas=<count> -f <manifest.yaml>"]
+  },
+  {
+    "description": "Conditional scale a deployment",
+    "commands": ["kubectl scale --current-replicas=<current> --replicas=<new> deployment/<name>"]
+  },
+  {
+    "description": "Delete a resource from a file",
+    "commands": ["kubectl delete -f <manifest.yaml>"]
+  },
+  {
+    "description": "Delete a pod immediately",
+    "commands": ["kubectl delete pod <pod> --now"]
+  },
+  {
+    "description": "Delete pods and services by name",
+    "commands": ["kubectl delete pod,service <name1> <name2>"]
+  },
+  {
+    "description": "Delete resources by label",
+    "commands": ["kubectl delete pods,services -l <label>=<value>"]
+  },
+  {
+    "description": "Delete all pods and services in a namespace",
+    "commands": ["kubectl -n <namespace> delete pod,svc --all"]
+  },
+  {
+    "description": "Dump pod logs",
+    "commands": ["kubectl logs <pod>"]
+  },
+  {
+    "description": "Dump pod logs for previous instance",
+    "commands": ["kubectl logs <pod> --previous"]
+  },
+  {
+    "description": "Dump logs for a specific container",
+    "commands": ["kubectl logs <pod> -c <container>"]
+  },
+  {
+    "description": "Stream pod logs",
+    "commands": ["kubectl logs -f <pod>"]
+  },
+  {
+    "description": "Stream logs for all pods with a label",
+    "commands": ["kubectl logs -f -l <label>=<value> --all-containers"]
+  },
+  {
+    "description": "Run a pod as interactive shell",
+    "commands": ["kubectl run -i --tty <name> --image=<image> -- sh"]
+  },
+  {
+    "description": "Start a pod in a namespace",
+    "commands": ["kubectl run <name> --image=<image> -n <namespace>"]
+  },
+  {
+    "description": "Generate pod YAML without creating",
+    "commands": ["kubectl run <name> --image=<image> --dry-run=client -o yaml > <file.yaml>"]
+  },
+  {
+    "description": "Attach to a running container",
+    "commands": ["kubectl attach <pod> -i"]
+  },
+  {
+    "description": "Port forward to a pod",
+    "commands": ["kubectl port-forward <pod> <local-port>:<remote-port>"]
+  },
+  {
+    "description": "Run command in a pod",
+    "commands": ["kubectl exec <pod> -- <command>"]
+  },
+  {
+    "description": "Interactive shell in a pod",
+    "commands": ["kubectl exec --stdin --tty <pod> -- /bin/sh"]
+  },
+  {
+    "description": "Run command in a specific container",
+    "commands": ["kubectl exec <pod> -c <container> -- <command>"]
+  },
+  {
+    "description": "Debug a pod with a temporary container",
+    "commands": ["kubectl debug <pod> -it --image=<image>"]
+  },
+  {
+    "description": "Debug a node",
+    "commands": ["kubectl debug node/<node> -it --image=<image>"]
+  },
+  {
+    "description": "Show metrics for all pods",
+    "commands": ["kubectl top pod"]
+  },
+  {
+    "description": "Show metrics for a pod and its containers",
+    "commands": ["kubectl top pod <pod> --containers"]
+  },
+  {
+    "description": "Show metrics for a pod sorted by cpu or memory",
+    "commands": ["kubectl top pod <pod> --sort-by=<cpu|memory>"]
+  },
+  {
+    "description": "Copy local directory to pod",
+    "commands": ["kubectl cp <local-path> <pod>:<remote-path>"]
+  },
+  {
+    "description": "Copy file to pod in specific container",
+    "commands": ["kubectl cp <local-path> <pod>:<remote-path> -c <container>"]
+  },
+  {
+    "description": "Copy file from pod to local",
+    "commands": ["kubectl cp <namespace>/<pod>:<remote-path> <local-path>"]
+  },
+  {
+    "description": "Dump logs for a deployment",
+    "commands": ["kubectl logs deploy/<deployment>"]
+  },
+  {
+    "description": "Port forward to a service",
+    "commands": ["kubectl port-forward svc/<service> <port>"]
+  },
+  {
+    "description": "Port forward to a deployment",
+    "commands": ["kubectl port-forward deploy/<deployment> <local-port>:<remote-port>"]
+  },
+  {
+    "description": "Run command in deployment's first pod",
+    "commands": ["kubectl exec deploy/<deployment> -- <command>"]
+  },
+  {
+    "description": "Mark node as unschedulable",
+    "commands": ["kubectl cordon <node>"]
+  },
+  {
+    "description": "Drain node for maintenance",
+    "commands": ["kubectl drain <node>"]
+  },
+  {
+    "description": "Mark node as schedulable",
+    "commands": ["kubectl uncordon <node>"]
+  },
+  {
+    "description": "Show metrics for all nodes",
+    "commands": ["kubectl top node"]
+  },
+  {
+    "description": "Show metrics for a node",
+    "commands": ["kubectl top node <node>"]
+  },
+  {
+    "description": "Display cluster info",
+    "commands": ["kubectl cluster-info"]
+  },
+  {
+    "description": "Dump cluster state",
+    "commands": ["kubectl cluster-info dump"]
+  },
+  {
+    "description": "Dump cluster state to a directory",
+    "commands": ["kubectl cluster-info dump --output-directory=<path>"]
+  },
+  {
+    "description": "View taints on nodes",
+    "commands": ["kubectl get nodes -o='custom-columns=NodeName:.metadata.name,TaintKey:.spec.taints[*].key,TaintValue:.spec.taints[*].value,TaintEffect:.spec.taints[*].effect'"]
+  },
+  {
+    "description": "Add a taint to a node",
+    "commands": ["kubectl taint nodes <node> <key>=<value>:<effect>"]
+  },
+  {
+    "description": "List all supported resource types",
+    "commands": ["kubectl api-resources"]
+  },
+  {
+    "description": "List all namespaced resources",
+    "commands": ["kubectl api-resources --namespaced=true"]
+  },
+  {
+    "description": "List all non-namespaced resources",
+    "commands": ["kubectl api-resources --namespaced=false"]
+  },
+  {
+    "description": "List resources with simple output",
+    "commands": ["kubectl api-resources -o name"]
+  },
+  {
+    "description": "List resources with wide output",
+    "commands": ["kubectl api-resources -o wide"]
+  },
+  {
+    "description": "List resources that support specific verbs",
+    "commands": ["kubectl api-resources --verbs=<verbs>"]
+  },
+  {
+    "description": "List resources in an API group",
+    "commands": ["kubectl api-resources --api-group=<group>"]
+  }
+]

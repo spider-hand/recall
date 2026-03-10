@@ -2,13 +2,19 @@ package main
 
 import (
 	"bufio"
+	"embed"
 	"encoding/json"
 	"fmt"
 	"math"
 	"os"
+	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 )
+
+//go:embed cheatsheets/*.json
+var cheatsheetsFS embed.FS
 
 type Entry struct {
 	Description string   `json:"description"`
@@ -217,6 +223,80 @@ func listEntries() {
 	}
 
 	printEntries(entries)
+}
+
+func listCheatsheets() []string {
+	entries, err := cheatsheetsFS.ReadDir("cheatsheets")
+	if err != nil {
+		return []string{}
+	}
+
+	var names []string
+	for _, entry := range entries {
+		if !entry.IsDir() && strings.HasSuffix(entry.Name(), ".json") {
+			name := strings.TrimSuffix(entry.Name(), ".json")
+			names = append(names, name)
+		}
+	}
+	sort.Strings(names)
+	return names
+}
+
+func loadCheatsheet(name string) []Entry {
+	data, err := cheatsheetsFS.ReadFile(filepath.Join("cheatsheets", name+".json"))
+	if err != nil {
+		return []Entry{}
+	}
+
+	var entries []Entry
+	if err := json.Unmarshal(data, &entries); err != nil {
+		return []Entry{}
+	}
+	return entries
+}
+
+func importEntries() {
+	cheatsheets := listCheatsheets()
+
+	if len(cheatsheets) == 0 {
+		fmt.Println("no cheatsheets available")
+		return
+	}
+
+	fmt.Println("available cheatsheets:")
+	for i, name := range cheatsheets {
+		fmt.Printf("  %d. %s\n", i+1, name)
+	}
+	fmt.Println()
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("select cheatsheet (enter number): ")
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("error reading input")
+		return
+	}
+
+	input = strings.TrimSpace(input)
+	num, err := strconv.Atoi(input)
+	if err != nil || num < 1 || num > len(cheatsheets) {
+		fmt.Println("invalid selection")
+		return
+	}
+
+	selectedName := cheatsheets[num-1]
+	cheatsheetEntries := loadCheatsheet(selectedName)
+
+	if len(cheatsheetEntries) == 0 {
+		fmt.Println("cheatsheet is empty or could not be loaded")
+		return
+	}
+
+	existingEntries := loadEntries()
+	existingEntries = append(existingEntries, cheatsheetEntries...)
+	saveEntries(existingEntries)
+
+	fmt.Printf("imported %d entries from %s\n", len(cheatsheetEntries), selectedName)
 }
 
 // tokenize converts a text into lowercase tokens split by whitespace
@@ -465,6 +545,7 @@ func main() {
 		fmt.Println("  recall -e, --edit <query>    Edit an entry")
 		fmt.Println("  recall -d, --delete <query>  Delete an entry")
 		fmt.Println("  recall -l, --list            List all entries")
+		fmt.Println("  recall -i, --import          Import from cheatsheet")
 		fmt.Println("  recall -v, --version         Show version")
 		fmt.Println("  recall -h, --help            Show help message")
 		return
@@ -504,6 +585,11 @@ func main() {
 
 	if args[0] == "--list" || args[0] == "-l" {
 		listEntries()
+		return
+	}
+
+	if args[0] == "--import" || args[0] == "-i" {
+		importEntries()
 		return
 	}
 

@@ -1,0 +1,357 @@
+[
+  {
+    "description": "Start a new repo",
+    "commands": [
+      "git init"
+    ]
+  },
+  {
+    "description": "Clone an existing repo",
+    "commands": [
+      "git clone <url>"
+    ]
+  },
+  {
+    "description": "Add untracked file or unstaged changes",
+    "commands": [
+      "git add <file>"
+    ]
+  },
+  {
+    "description": "Add all untracked files and unstaged changes",
+    "commands": [
+      "git add ."
+    ]
+  },
+  {
+    "description": "Choose which parts of a file to stage",
+    "commands": [
+      "git add -p"
+    ]
+  },
+  {
+    "description": "Move file",
+    "commands": [
+      "git mv <old> <new>"
+    ]
+  },
+  {
+    "description": "Delete file",
+    "commands": [
+      "git rm <file>"
+    ]
+  },
+  {
+    "description": "Tell Git to forget about a file without deleting it",
+    "commands": [
+      "git rm --cached <file>"
+    ]
+  },
+  {
+    "description": "Unstage one file",
+    "commands": [
+      "git reset <file>"
+    ]
+  },
+  {
+    "description": "Unstage everything",
+    "commands": [
+      "git reset"
+    ]
+  },
+  {
+    "description": "Check what you added",
+    "commands": [
+      "git status"
+    ]
+  },
+  {
+    "description": "Switch branches",
+    "commands": [
+      "git switch <branch>"
+    ]
+  },
+  {
+    "description": "Create a branch",
+    "commands": [
+      "git switch -c <branch>"
+    ]
+  },
+  {
+    "description": "List branches",
+    "commands": [
+      "git branch"
+    ]
+  },
+  {
+    "description": "List branches by most recently committed to",
+    "commands": [
+      "git branch --sort=-committerdate"
+    ]
+  },
+  {
+    "description": "Delete a branch",
+    "commands": [
+      "git branch -d <branch>"
+    ]
+  },
+  {
+    "description": "Force delete a branch",
+    "commands": [
+      "git branch -D <branch>"
+    ]
+  },
+  {
+    "description": "Diff all staged and unstaged changes",
+    "commands": [
+      "git diff HEAD"
+    ]
+  },
+  {
+    "description": "Diff just staged changes",
+    "commands": [
+      "git diff --staged"
+    ]
+  },
+  {
+    "description": "Diff just unstaged changes",
+    "commands": [
+      "git diff"
+    ]
+  },
+  {
+    "description": "Show diff between a commit and its parent",
+    "commands": [
+      "git show <commit>"
+    ]
+  },
+  {
+    "description": "Diff two commits",
+    "commands": [
+      "git diff <commit> <commit>"
+    ]
+  },
+  {
+    "description": "Diff one file since a commit",
+    "commands": [
+      "git diff <commit> <file>"
+    ]
+  },
+  {
+    "description": "Show a summary of a diff",
+    "commands": [
+      "git diff <commit> --stat",
+      "git show <commit> --stat"
+    ]
+  },
+  {
+    "description": "Delete unstaged changes to one file",
+    "commands": [
+      "git restore <file>"
+    ]
+  },
+  {
+    "description": "Delete all staged and unstaged changes to one file",
+    "commands": [
+      "git restore --staged --worktree <file>"
+    ]
+  },
+  {
+    "description": "Delete all staged and unstaged changes",
+    "commands": [
+      "git reset --hard"
+    ]
+  },
+  {
+    "description": "Delete untracked files",
+    "commands": [
+      "git clean -f"
+    ]
+  },
+  {
+    "description": "Stash all staged and unstaged changes",
+    "commands": [
+      "git stash"
+    ]
+  },
+  {
+    "description": "Undo the most recent commit keeping changes",
+    "commands": [
+      "git reset HEAD^"
+    ]
+  },
+  {
+    "description": "Squash the last N commits into one",
+    "commands": [
+      "git rebase -i HEAD~<n>"
+    ]
+  },
+  {
+    "description": "Undo a failed rebase",
+    "commands": [
+      "git reflog <branch>",
+      "git reset --hard <commit>"
+    ]
+  },
+  {
+    "description": "Look at a branch's history",
+    "commands": [
+      "git log <branch>"
+    ]
+  },
+  {
+    "description": "Look at a branch's history as a graph",
+    "commands": [
+      "git log --graph <branch>"
+    ]
+  },
+  {
+    "description": "Look at history in one line format",
+    "commands": [
+      "git log --oneline"
+    ]
+  },
+  {
+    "description": "Show every commit that modified a file",
+    "commands": [
+      "git log <file>"
+    ]
+  },
+  {
+    "description": "Show every commit that modified a file including renames",
+    "commands": [
+      "git log --follow <file>"
+    ]
+  },
+  {
+    "description": "Find every commit that added or removed some text",
+    "commands": [
+      "git log -G <text>"
+    ]
+  },
+  {
+    "description": "Show who last changed each line of a file",
+    "commands": [
+      "git blame <file>"
+    ]
+  },
+  {
+    "description": "Rebase current branch onto another branch",
+    "commands": [
+      "git switch <branch>",
+      "git rebase <target-branch>"
+    ]
+  },
+  {
+    "description": "Merge a branch into current branch",
+    "commands": [
+      "git switch <target-branch>",
+      "git merge <branch>"
+    ]
+  },
+  {
+    "description": "Squash merge a branch into current branch",
+    "commands": [
+      "git switch <target-branch>",
+      "git merge --squash <branch>",
+      "git commit"
+    ]
+  },
+  {
+    "description": "Fast-forward merge a branch",
+    "commands": [
+      "git switch <target-branch>",
+      "git merge <branch>"
+    ]
+  },
+  {
+    "description": "Copy one commit onto the current branch",
+    "commands": [
+      "git cherry-pick <commit>"
+    ]
+  },
+  {
+    "description": "Get the version of a file from another commit",
+    "commands": [
+      "git restore --source <commit> <file>"
+    ]
+  },
+  {
+    "description": "Add a remote",
+    "commands": [
+      "git remote add <name> <url>"
+    ]
+  },
+  {
+    "description": "Push a branch to a remote",
+    "commands": [
+      "git push <remote> <branch>"
+    ]
+  },
+  {
+    "description": "Push the current branch to its tracking branch",
+    "commands": [
+      "git push"
+    ]
+  },
+  {
+    "description": "Push a branch for the first time",
+    "commands": [
+      "git push -u <remote> <branch>"
+    ]
+  },
+  {
+    "description": "Force push",
+    "commands": [
+      "git push --force-with-lease"
+    ]
+  },
+  {
+    "description": "Push tags",
+    "commands": [
+      "git push --tags"
+    ]
+  },
+  {
+    "description": "Fetch changes without changing local branches",
+    "commands": [
+      "git fetch <remote> <branch>"
+    ]
+  },
+  {
+    "description": "Fetch changes and rebase current branch",
+    "commands": [
+      "git pull --rebase"
+    ]
+  },
+  {
+    "description": "Fetch changes and merge into current branch",
+    "commands": [
+      "git pull"
+    ]
+  },
+  {
+    "description": "Set a config option",
+    "commands": [
+      "git config <key> <value>"
+    ]
+  },
+  {
+    "description": "Set a config option globally",
+    "commands": [
+      "git config --global ..."
+    ]
+  },
+  {
+    "description": "Add a git alias",
+    "commands": [
+      "git config alias.<name> <command>"
+    ]
+  },
+  {
+    "description": "See all possible config options",
+    "commands": [
+      "man git-config"
+    ]
+  }
+]

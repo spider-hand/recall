@@ -35,9 +35,7 @@ go install github.com/spider-hand/recall@latest
 
 ## Usage
 
-### Basic Usage
-
-#### Search
+### Search
 
 Search commands by describing what you want to do:
 
@@ -69,7 +67,7 @@ If multiple results are found, they are listed:
    $ git fetch -p
 ```
 
-#### Add
+### Add
 
 ```sh
 recall --add
@@ -94,6 +92,14 @@ description: undo last commit
 > git reset
 ```
 
+### Import
+You can import pre-defined command cheatsheets created based on the official docs by using `--import`.
+
+Here are the available cheatsheets:
+- [Git](https://git-scm.com/cheat-sheet)
+- [Docker](https://www.docker.com/resources/cli-cheat-sheet/)
+- [Kubernetes](https://kubernetes.io/docs/reference/kubectl/quick-reference/)
+
 ### Other Actions
 
 ```
@@ -101,6 +107,7 @@ description: undo last commit
 -e, --edit <query>      Edit an entry
 -d, --delete <query>    Delete an entry
 -l, --list              List all entries
+-i, --import            Import from cheatsheet
 -v, --version           Show version
 -h, --help              Show help message
 ```

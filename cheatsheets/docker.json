@@ -1,0 +1,98 @@
+[
+  {
+    "description": "Build an image from a Dockerfile",
+    "commands": ["docker build -t <image_name> ."]
+  },
+  {
+    "description": "Build an image from a Dockerfile without the cache",
+    "commands": ["docker build -t <image_name> . --no-cache"]
+  },
+  {
+    "description": "List local images",
+    "commands": ["docker images"]
+  },
+  {
+    "description": "Delete an image",
+    "commands": ["docker rmi <image_name>"]
+  },
+  {
+    "description": "Remove all unused images",
+    "commands": ["docker image prune"]
+  },
+  {
+    "description": "Login into Docker",
+    "commands": ["docker login -u <username>"]
+  },
+  {
+    "description": "Publish an image to Docker Hub",
+    "commands": ["docker push <username>/<image_name>"]
+  },
+  {
+    "description": "Search Hub for an image",
+    "commands": ["docker search <image_name>"]
+  },
+  {
+    "description": "Pull an image from a Docker Hub",
+    "commands": ["docker pull <image_name>"]
+  },
+  {
+    "description": "Start the docker daemon",
+    "commands": ["docker -d"]
+  },
+  {
+    "description": "Get help with Docker",
+    "commands": ["docker --help"]
+  },
+  {
+    "description": "Display system-wide information",
+    "commands": ["docker info"]
+  },
+  {
+    "description": "Create and run a container from an image with a custom name",
+    "commands": ["docker run --name <container_name> <image_name>"]
+  },
+  {
+    "description": "Run a container and publish port to the host",
+    "commands": ["docker run -p <host_port>:<container_port> <image_name>"]
+  },
+  {
+    "description": "Run a container in the background",
+    "commands": ["docker run -d <image_name>"]
+  },
+  {
+    "description": "Start an existing container",
+    "commands": ["docker start <container_name>"]
+  },
+  {
+    "description": "Stop an existing container",
+    "commands": ["docker stop <container_name>"]
+  },
+  {
+    "description": "Remove a stopped container",
+    "commands": ["docker rm <container_name>"]
+  },
+  {
+    "description": "Open a shell inside a running container",
+    "commands": ["docker exec -it <container_name> sh"]
+  },
+  {
+    "description": "Fetch and follow the logs of a container",
+    "commands": ["docker logs -f <container_name>"]
+  },
+  {
+    "description": "Inspect a running container",
+    "commands": ["docker inspect <container_name>"]
+  },
+  {
+    "description": "List currently running containers",
+    "commands": ["docker ps"]
+  },
+  {
+    "description": "List all docker containers",
+    "commands": ["docker ps --all"]
+  },
+  {
+    "description": "View resource usage stats",
+    "commands": ["docker container stats"]
+  }
+]

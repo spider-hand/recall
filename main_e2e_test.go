@@ -102,12 +102,12 @@ func TestHelp(t *testing.T) {
 		{
 			name:     "with --help flag",
 			args:     []string{"--help"},
-			contains: []string{"Usage:", "--add", "--edit", "--delete", "--list"},
+			contains: []string{"Usage:", "--add", "--edit", "--delete", "--list", "--import"},
 		},
 		{
 			name:     "with -h short flag",
 			args:     []string{"-h"},
-			contains: []string{"Usage:", "-a, --add", "-e, --edit", "-d, --delete", "-l, --list"},
+			contains: []string{"Usage:", "-a, --add", "-e, --edit", "-d, --delete", "-l, --list", "-i, --import"},
 		},
 		{
 			name:     "with no args",
@@ -469,5 +469,92 @@ func TestDelete(t *testing.T) {
 		assertContains(t, output, "deleted")
 		entries := readEntries(t, dataDir)
 		assertEntryCount(t, entries, 0)
+	})
+}
+
+func TestImport(t *testing.T) {
+	tests := []struct {
+		name         string
+		args         []string
+		stdin        string
+		wantContains string
+	}{
+		{
+			name:         "with --import flag",
+			args:         []string{"--import"},
+			stdin:        "1\n",
+			wantContains: "imported",
+		},
+		{
+			name:         "with -i short flag",
+			args:         []string{"-i"},
+			stdin:        "1\n",
+			wantContains: "imported",
+		},
+		{
+			name:         "invalid selection",
+			args:         []string{"--import"},
+			stdin:        "999\n",
+			wantContains: "invalid selection",
+		},
+		{
+			name:         "non-numeric input",
+			args:         []string{"--import"},
+			stdin:        "abc\n",
+			wantContains: "invalid selection",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			dataDir := setupTestDir(t, []Entry{})
+			output := runCommand(t, dataDir, tt.stdin, tt.args...)
+			assertContains(t, output, tt.wantContains)
+		})
+	}
+
+	t.Run("shows cheatsheet list", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{})
+		output := runCommand(t, dataDir, "1\n", "--import")
+
+		assertContains(t, output, "available cheatsheets:")
+		assertContains(t, output, "docker")
+		assertContains(t, output, "git")
+		assertContains(t, output, "k8s")
+	})
+
+	t.Run("imports entries to file", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{})
+		runCommand(t, dataDir, "1\n", "--import")
+
+		entries := readEntries(t, dataDir)
+		if len(entries) == 0 {
+			t.Error("expected entries to be imported")
+		}
+	})
+
+	t.Run("merges with existing entries", func(t *testing.T) {
+		initialEntries := []Entry{
+			{Description: "my custom command", Commands: []string{"custom cmd"}},
+		}
+		dataDir := setupTestDir(t, initialEntries)
+
+		runCommand(t, dataDir, "1\n", "--import")
+
+		entries := readEntries(t, dataDir)
+		if len(entries) <= 1 {
+			t.Error("expected more than 1 entry after import")
+		}
+
+		found := false
+		for _, e := range entries {
+			if e.Description == "my custom command" {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Error("expected original entry to be preserved")
+		}
 	})
 }
