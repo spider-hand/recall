@@ -3,3 +3,6 @@ recall
 
 # local data
 entries.json
+
+# goreleaser
+dist/
