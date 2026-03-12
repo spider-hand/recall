@@ -92,8 +92,9 @@ description: undo last commit
 > git reset
 ```
 
-### Import
-You can import pre-defined command cheatsheets created based on the official docs by using `--import`.
+### Import & Cheat
+You can import pre-defined command cheatsheets created based on the official docs by using `--import`. If you want to search a command in a cheatsheet, use `--cheat`.
+
 
 Here are the available cheatsheets:
 - [Git](https://git-scm.com/cheat-sheet)
@@ -108,6 +109,7 @@ Here are the available cheatsheets:
 -d, --delete <query>    Delete an entry
 -l, --list              List all entries
 -i, --import            Import from cheatsheet
+-c, --cheat             Search in cheatsheet
 -v, --version           Show version
 -h, --help              Show help message
 ```

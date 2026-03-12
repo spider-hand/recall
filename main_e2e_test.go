@@ -102,12 +102,12 @@ func TestHelp(t *testing.T) {
 		{
 			name:     "with --help flag",
 			args:     []string{"--help"},
-			contains: []string{"Usage:", "--add", "--edit", "--delete", "--list", "--import"},
+			contains: []string{"Usage:", "--add", "--edit", "--delete", "--list", "--import", "--cheat"},
 		},
 		{
 			name:     "with -h short flag",
 			args:     []string{"-h"},
-			contains: []string{"Usage:", "-a, --add", "-e, --edit", "-d, --delete", "-l, --list", "-i, --import"},
+			contains: []string{"Usage:", "-a, --add", "-e, --edit", "-d, --delete", "-l, --list", "-i, --import", "-c, --cheat"},
 		},
 		{
 			name:     "with no args",
@@ -556,5 +556,69 @@ func TestImport(t *testing.T) {
 		if !found {
 			t.Error("expected original entry to be preserved")
 		}
+	})
+}
+
+func TestCheat(t *testing.T) {
+	tests := []struct {
+		name         string
+		args         []string
+		stdin        string
+		wantContains string
+	}{
+		{
+			name:         "with --cheat flag shows list",
+			args:         []string{"--cheat"},
+			stdin:        "2\nbranch\n",
+			wantContains: "available cheatsheets:",
+		},
+		{
+			name:         "with -c short flag",
+			args:         []string{"-c"},
+			stdin:        "2\nbranch\n",
+			wantContains: "available cheatsheets:",
+		},
+		{
+			name:         "invalid selection",
+			args:         []string{"--cheat"},
+			stdin:        "999\n",
+			wantContains: "invalid selection",
+		},
+		{
+			name:         "non-numeric input",
+			args:         []string{"--cheat"},
+			stdin:        "abc\n",
+			wantContains: "invalid selection",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			dataDir := setupTestDir(t, []Entry{})
+			output := runCommand(t, dataDir, tt.stdin, tt.args...)
+			assertContains(t, output, tt.wantContains)
+		})
+	}
+
+	t.Run("search returns results", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{})
+		output := runCommand(t, dataDir, "2\nbranch\n", "--cheat")
+
+		assertContains(t, output, "query:")
+		assertContains(t, output, "branch")
+	})
+
+	t.Run("search with no results", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{})
+		output := runCommand(t, dataDir, "1\nxyznonexistent\n", "--cheat")
+
+		assertContains(t, output, "no results")
+	})
+
+	t.Run("empty query", func(t *testing.T) {
+		dataDir := setupTestDir(t, []Entry{})
+		output := runCommand(t, dataDir, "1\n\n", "--cheat")
+
+		assertContains(t, output, "no query provided")
 	})
 }

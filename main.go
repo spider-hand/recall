@@ -299,6 +299,72 @@ func importEntries() {
 	fmt.Printf("imported %d entries from %s\n", len(cheatsheetEntries), selectedName)
 }
 
+func searchCheatsheet() {
+	cheatsheets := listCheatsheets()
+
+	if len(cheatsheets) == 0 {
+		fmt.Println("no cheatsheets available")
+		return
+	}
+
+	fmt.Println("available cheatsheets:")
+	for i, name := range cheatsheets {
+		fmt.Printf("  %d. %s\n", i+1, name)
+	}
+	fmt.Println()
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("select cheatsheet (enter number): ")
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("error reading input")
+		return
+	}
+
+	input = strings.TrimSpace(input)
+	num, err := strconv.Atoi(input)
+	if err != nil || num < 1 || num > len(cheatsheets) {
+		fmt.Println("invalid selection")
+		return
+	}
+
+	selectedName := cheatsheets[num-1]
+	cheatsheetEntries := loadCheatsheet(selectedName)
+
+	if len(cheatsheetEntries) == 0 {
+		fmt.Println("cheatsheet is empty or could not be loaded")
+		return
+	}
+
+	fmt.Print("query: ")
+	queryInput, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("error reading input")
+		return
+	}
+
+	query := strings.TrimSpace(queryInput)
+	if query == "" {
+		fmt.Println("no query provided")
+		return
+	}
+
+	results := search(cheatsheetEntries, query)
+
+	if len(results) == 0 {
+		fmt.Println("no results")
+		return
+	}
+
+	fmt.Println()
+	if len(results) == 1 {
+		printEntry(results[0])
+		return
+	}
+
+	printEntries(results)
+}
+
 // tokenize converts a text into lowercase tokens split by whitespace
 func tokenize(text string) []string {
 	text = strings.ToLower(text)
@@ -546,6 +612,7 @@ func main() {
 		fmt.Println("  recall -d, --delete <query>  Delete an entry")
 		fmt.Println("  recall -l, --list            List all entries")
 		fmt.Println("  recall -i, --import          Import from cheatsheet")
+		fmt.Println("  recall -c, --cheat           Search in cheatsheet")
 		fmt.Println("  recall -v, --version         Show version")
 		fmt.Println("  recall -h, --help            Show help message")
 		return
@@ -590,6 +657,11 @@ func main() {
 
 	if args[0] == "--import" || args[0] == "-i" {
 		importEntries()
+		return
+	}
+
+	if args[0] == "--cheat" || args[0] == "-c" {
+		searchCheatsheet()
 		return
 	}
 
