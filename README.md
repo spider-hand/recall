@@ -1,10 +1,16 @@
 # recall
 
-![demo](./assets/demo.gif)
+![demo1](./assets/demo1.png)
+![demo2](./assets/demo2.png)
 
 [![Build](https://github.com/spider-hand/recall/actions/workflows/ci.yml/badge.svg)](https://github.com/spider-hand/recall/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![Go Reference](https://pkg.go.dev/badge/github.com/spider-hand/recall.svg)](https://pkg.go.dev/github.com/spider-hand/recall) [![Go Report Card](https://goreportcard.com/badge/github.com/spider-hand/recall)](https://goreportcard.com/report/github.com/spider-hand/recall)
 
 A CLI tool to find commands by describing what you want to do when you forget them
+
+## Features
+- Search commands by describing what you want to do, similar to asking ChatGPT
+- Build your own command memo with custom descriptions and commands
+- Quickly look up commands from official cheatsheets
 
 ## Motivation
 
@@ -12,7 +18,7 @@ Even after years of working as a software engineer, I still find myself forgetti
 
 You could search your shell history, keep notes, or ask ChatGPT, but sometimes that might feel like overkill.
 
-I thought it might be helpful to have something that provides a similar UX to asking ChatGPT, but directly in the terminal.
+I built this since I thought it would be helpful to have something that provides a similar UX to asking ChatGPT, but directly in the terminal.
 
 ## Installation
 
